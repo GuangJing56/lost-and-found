@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <ul class="navbar">
+            <li><a href="{{ url_for('about') }}" class="nav-btn">Home</a></li>
+            {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('logout') }}" class="nav-btn">Logout</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login') }}" class="nav-btn login-btn">Login</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <!-- Login Form -->
+    <div class="container">
+        <h2>Login</h2>
+        <form method="POST" action="{{ url_for('login') }}">
+            {{ form.hidden_tag() }}
+            <div>
+                <label for="username">Username</label>
+                {{ form.username() }}
+            </div>
+            <div>
+                <label for="password">Password</label>
+                {{ form.password() }}
+            </div>
+            <button type="submit" class="nav-btn">Login</button>
+        </form>
+        <p>Don't have an account? <a href="{{ url_for('signup') }}" class="nav-btn">Sign Up</a></p>
+    </div>
+
+</body>
+</html>

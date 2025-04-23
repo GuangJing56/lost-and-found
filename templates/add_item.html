@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Item</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <ul class="navbar">
+            <li><a href="{{ url_for('about') }}" class="nav-btn">Home</a></li>
+            <li><a href="{{ url_for('add_item') }}" class="nav-btn">Add Item</a></li>
+            {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('logout') }}" class="nav-btn">Logout</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login') }}" class="nav-btn login-btn">Login</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <!-- Add Item Form -->
+    <div class="container">
+        <h2>Add Item</h2>
+        <form method="POST" action="{{ url_for('add_item') }}">
+            <div>
+                <label for="name">Item Name</label>
+                <input type="text" name="name" id="name" required>
+            </div>
+            <div>
+                <label for="description">Item Description</label>
+                <textarea name="description" id="description" required></textarea>
+            </div>
+            <button type="submit" class="nav-btn">Add Item</button>
+        </form>
+    </div>
+
+</body>
+</html>
