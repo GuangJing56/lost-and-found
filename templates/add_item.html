@@ -2,40 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Item</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Add Item - Lost and Found</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-
-    <!-- Navigation Bar -->
-    <nav>
-        <ul class="navbar">
-            <li><a href="{{ url_for('about') }}" class="nav-btn">Home</a></li>
-            <li><a href="{{ url_for('add_item') }}" class="nav-btn">Add Item</a></li>
-            {% if current_user.is_authenticated %}
-                <li><a href="{{ url_for('logout') }}" class="nav-btn">Logout</a></li>
-            {% else %}
-                <li><a href="{{ url_for('login') }}" class="nav-btn login-btn">Login</a></li>
-            {% endif %}
-        </ul>
-    </nav>
-
-    <!-- Add Item Form -->
     <div class="container">
-        <h2>Add Item</h2>
-        <form method="POST" action="{{ url_for('add_item') }}">
-            <div>
-                <label for="name">Item Name</label>
-                <input type="text" name="name" id="name" required>
+        <h1>Add a Lost Item</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="input-group">
+                <label for="name">Item Name:</label>
+                <input type="text" id="name" name="name" required>
             </div>
-            <div>
-                <label for="description">Item Description</label>
-                <textarea name="description" id="description" required></textarea>
+            <div class="input-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required></textarea>
             </div>
-            <button type="submit" class="nav-btn">Add Item</button>
+            <div class="input-group">
+                <label for="phone">Phone Number:</label>
+                <input type="text" id="phone" name="phone" required>
+            </div>
+            <div class="input-group">
+                <label for="photo">Photo:</label>
+                <input type="file" id="photo" name="photo" required>
+            </div>
+            <button type="submit">Add Item</button>
         </form>
     </div>
-
 </body>
 </html>
