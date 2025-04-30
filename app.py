@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = 'your_secret_key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
@@ -82,15 +82,63 @@ def add_item():
         description = request.form['description']
         phone = request.form['phone']
         photo = request.files['photo']
+
+        # Save photo if provided
         if photo and allowed_file(photo.filename):
             filename = secure_filename(photo.filename)
             photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             new_item = LostItem(name=name, description=description, phone=phone, photo=filename)
-            db.session.add(new_item)
-            db.session.commit()
-            flash('Item added successfully', 'success')
-            return redirect(url_for('about'))
+        else:
+            new_item = LostItem(name=name, description=description, phone=phone)
+
+        db.session.add(new_item)
+        db.session.commit()
+        flash('Item added successfully', 'success')
+        return redirect(url_for('items'))
+
     return render_template('add_item.html')
+
+@app.route('/edit_item/<int:item_id>', methods=['GET', 'POST'])
+@login_required
+def edit_item(item_id):
+    item = LostItem.query.get_or_404(item_id)
+    
+    # Check if the current user is the one who added the item
+    if item.user_id != current_user.id:
+        flash("You can only edit your own items", "danger")
+        return redirect(url_for('items'))
+
+    if request.method == 'POST':
+        item.name = request.form['name']
+        item.description = request.form['description']
+        item.phone = request.form['phone']
+        db.session.commit()
+        flash('Item updated successfully', 'success')
+        return redirect(url_for('items'))
+
+    return render_template('edit_item.html', item=item)
+
+@app.route('/delete_item/<int:item_id>')
+@login_required
+def delete_item(item_id):
+    item = LostItem.query.get_or_404(item_id)
+    
+    # Check if the current user is the one who added the item
+    if item.user_id != current_user.id:
+        flash("You can only delete your own items", "danger")
+        return redirect(url_for('items'))
+
+    db.session.delete(item)
+    db.session.commit()
+    flash('Item deleted successfully', 'success')
+    return redirect(url_for('items'))
+
+@app.route('/items')
+@login_required  
+def items():
+    items = LostItem.query.all()
+    return render_template('items.html', items=items)
+
 
 if __name__ == '__main__':
     with app.app_context():
