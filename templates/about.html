@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="centered-content">
-    <h1>Welcome to the Lost and Found App</h1>
-    <p>This platform allows you to find lost items or report found ones.</p>
-    <p>Login to report lost items.</p>
+<div class="about-container">
+    <h1>Welcome to the Lost & Found System</h1>
+    <p>This platform helps students and staff report, find, and track lost and found items across the campus.</p>
+    <p>To report or manage items, please <a href="{{ url_for('login') }}">log in</a> or <a href="{{ url_for('signup') }}">sign up</a>.</p>
 </div>
 {% endblock %}

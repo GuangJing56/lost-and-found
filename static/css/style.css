@@ -1,0 +1,250 @@
+/* Global Styles */
+body {
+    background-color: #121212;
+    color: #f5f5f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* Reset links */
+a {
+    color: #90caf9;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color: #1e1e1e;
+    padding: 0 20px;
+    height: 60px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.navbar a {
+    margin-left: 20px;
+    padding: 10px 16px;
+    font-size: 14px;
+    border-radius: 6px;
+    background-color: transparent;
+    transition: background 0.3s;
+}
+
+.navbar a:hover {
+    background-color: #333;
+}
+
+/* Content Container */
+.container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* About Section */
+.about-container {
+    text-align: center;
+    padding: 100px 20px;
+}
+
+.about-container h1 {
+    font-size: 42px;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.about-container p {
+    font-size: 18px;
+    color: #ccc;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Form Styles */
+form {
+    background-color: #1a1a1a;
+    padding: 25px;
+    margin: 40px auto;
+    border-radius: 8px;
+    max-width: 450px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea,
+input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background-color: #2b2b2b;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 5px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+/* Cards (e.g., for lost items) */
+.card {
+    background-color: #1e1e1e;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(50, 50, 50, 0.5);
+}
+
+.card img {
+    max-width: 100%;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.card h2 {
+    margin-top: 0;
+    color: #fff;
+}
+
+.card p {
+    color: #ccc;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        height: auto;
+        padding: 10px 20px;
+    }
+
+    .navbar a {
+        margin: 10px 0;
+        padding: 8px 12px;
+    }
+
+    .about-container h1 {
+        font-size: 30px;
+    }
+
+    .about-container p {
+        font-size: 16px;
+    }
+
+    form {
+        margin: 20px;
+        padding: 20px;
+    }
+}
+/* Form container */
+.form-container {
+    background-color: #1a1a1a;
+    padding: 30px;
+    margin: 60px auto;
+    border-radius: 8px;
+    max-width: 400px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+}
+
+.form-container h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #eee;
+}
+
+/* Flash alerts */
+.alerts {
+    margin-bottom: 20px;
+}
+.alert {
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+.alert.success {
+    background-color: #2e7d32;
+    color: #fff;
+}
+.alert.danger {
+    background-color: #c62828;
+    color: #fff;
+}
+
+/* Input groups */
+.input-group {
+    margin-bottom: 20px;
+}
+.input-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: #ccc;
+    font-size: 14px;
+}
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    background-color: #333;
+    color: #f5f5f5;
+    border: 1px solid #444;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Button */
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #444;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+button:hover {
+    background-color: #555;
+}
+
+/* Switch to login link */
+.switch-auth {
+    margin-top: 15px;
+    text-align: center;
+    color: #aaa;
+}
+.switch-auth a {
+    color: #90caf9;
+}
+.switch-auth a:hover {
+    text-decoration: underline;
+}
