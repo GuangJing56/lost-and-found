@@ -164,6 +164,7 @@ button:hover {
         padding: 20px;
     }
 }
+
 /* Form container */
 .form-container {
     background-color: #1a1a1a;
@@ -185,16 +186,19 @@ button:hover {
 .alerts {
     margin-bottom: 20px;
 }
+
 .alert {
     padding: 10px 15px;
     border-radius: 5px;
     margin-bottom: 10px;
     font-size: 14px;
 }
+
 .alert.success {
     background-color: #2e7d32;
     color: #fff;
 }
+
 .alert.danger {
     background-color: #c62828;
     color: #fff;
@@ -204,22 +208,23 @@ button:hover {
 .input-group {
     margin-bottom: 20px;
 }
+
 .input-group label {
     display: block;
-    margin-bottom: 3px;
+    margin-bottom: 6px;
     color: #ccc;
     font-size: 14px;
 }
+
 .input-group input {
-    width: 90%;
-    padding: 16px;
-    background-color: #2c2c2c;
-    color: #ffffff;
-    border: 1px solid #555;
-    border-radius: 6px;
+    width: 100%;
+    padding: 12px;
+    background-color: #333;
+    color: #f5f5f5;
+    border: 1px solid #444;
+    border-radius: 5px;
     font-size: 16px;
 }
-
 
 /* Button */
 button {
@@ -233,6 +238,7 @@ button {
     cursor: pointer;
     transition: background 0.3s ease;
 }
+
 button:hover {
     background-color: #555;
 }
@@ -243,9 +249,11 @@ button:hover {
     text-align: center;
     color: #aaa;
 }
+
 .switch-auth a {
     color: #90caf9;
 }
+
 .switch-auth a:hover {
     text-decoration: underline;
 }
