@@ -159,11 +159,17 @@ def register_routes(app):
     @login_required
     def delete_item(item_id):
         item = LostItem.query.get_or_404(item_id)
-        if item.owner != current_user:
-            abort(403)
+
+        # Check if the user is an admin or the item owner
+        if item.owner != current_user and not current_user.is_admin:
+            flash('You do not have permission to delete this item.', 'danger')
+            return redirect(url_for('browse'))
+
+        # If it's either the owner or an admin, proceed to delete the item
         db.session.delete(item)
         db.session.commit()
-        flash('Item deleted.', 'success')
+        
+        flash('Item deleted successfully.', 'success')
         return redirect(url_for('browse'))
 
     @app.route('/admin_signup', methods=['GET', 'POST'])
