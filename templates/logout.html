@@ -1,0 +1,17 @@
+<!-- templates/logout.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="logout-message">
+        <h2>You have successfully logged out!</h2>
+        <p>Redirecting you to the login page...</p>
+        <a href="{{ url_for('login') }}">Click here if you are not redirected</a>
+    </div>
+</body>
+</html>

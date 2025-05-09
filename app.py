@@ -19,22 +19,17 @@ def create_app():
         ALLOWED_EXTENSIONS={'jpg', 'jpeg', 'png', 'gif'}
     )
 
-    # Ensure upload folder exists
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-    # Init extensions
     db.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'login'
 
-    # Create database
     with app.app_context():
         db.create_all()
 
-    # Register routes
     register_routes(app)
 
-    # Error handlers
     @app.errorhandler(404)
     def not_found(e):
         return render_template('404.html'), 404
@@ -45,17 +40,11 @@ def create_app():
 
     return app
 
-# Initialize extensions outside factory
+# Extensions
 db = SQLAlchemy()
 login_manager = LoginManager()
 
 # Models
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)
-    items = db.relationship('LostItem', backref='owner', lazy='dynamic')
-
 class LostItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
@@ -65,17 +54,20 @@ class LostItem(db.Model):
     date_reported = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
-# User loader for Flask-Login
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
+    items = db.relationship('LostItem', backref='owner', lazy='dynamic')
+
+@login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-login_manager.user_loader(load_user)
 
-# Utility
 def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-# Routes registration
 def register_routes(app):
     @app.route('/')
     def about():
@@ -174,7 +166,34 @@ def register_routes(app):
         flash('Item deleted.', 'success')
         return redirect(url_for('browse'))
 
-# Entry point
+    @app.route('/admin_signup', methods=['GET', 'POST'])
+    @login_required
+    def admin_signup():
+        if not current_user.is_admin:
+            flash('You do not have permission to access this page.', 'danger')
+            return redirect(url_for('login'))
+
+        if request.method == 'POST':
+            username = request.form['username'].strip()
+            password = request.form['password'].strip()
+
+            if not username or not password:
+                flash('Username and password cannot be empty.', 'danger')
+                return redirect(url_for('admin_signup'))
+
+            if User.query.filter_by(username=username).first():
+                flash('Username already exists.', 'danger')
+                return redirect(url_for('admin_signup'))
+
+            hashed = generate_password_hash(password)
+            user = User(username=username, password=hashed, is_admin=True)
+            db.session.add(user)
+            db.session.commit()
+            flash('Admin account created successfully.', 'success')
+            return redirect(url_for('login'))
+
+        return render_template('admin_signup.html')
+
 if __name__ == '__main__':
     app = create_app()
     app.run(debug=True)

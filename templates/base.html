@@ -1,3 +1,4 @@
+<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,12 +11,18 @@
     <!-- Navigation Bar -->
     <div class="navbar">
         <a href="{{ url_for('about') }}">About Us</a>
-        <a href="{{ url_for('login') }}">Login</a>
-        <a href="{{ url_for('add_item') }}">Add Item</a>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('browse') }}">Browse</a>
+            <a href="{{ url_for('add_item') }}">Add Item</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+        {% endif %}
     </div>
 
-    <!-- 页面内容区域 -->
-    {% block content %}{% endblock %}
-
+    <!-- Page Content -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
 </body>
 </html>
