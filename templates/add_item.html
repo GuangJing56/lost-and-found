@@ -18,7 +18,15 @@
         </div>
         <div class="input-group">
             <label for="photo">Photo:</label>
-            <input type="file" id="photo" name="photo" required>
+            <input type="file" id="photo" name="photo">
+        </div>
+        <div class="input-group">
+            <label for="status">Status:</label>
+            <select id="status" name="status">
+                <option value="lost">Lost</option>
+                <option value="found">Found</option>
+                <option value="returned">Returned</option>
+            </select>
         </div>
         <button type="submit">Add Item</button>
     </form>

@@ -243,23 +243,6 @@ button:hover {
     text-decoration: underline;
 }
 
-/* Additional Styling for Buttons (e.g., delete) */
-.delete-btn {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 1em;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background-color 0.3s;
-}
-
-.delete-btn:hover {
-    background-color: #c0392b;
-}
-
 /* Item list (for browse page) */
 .items-list {
     display: grid;
@@ -291,13 +274,28 @@ button:hover {
     font-size: 1em;
 }
 
-.item-photo {
-    text-align: center;
-    margin-top: 15px;
-}
-
 .item-img {
-    max-width: 250px;
+    max-width: 300px;
     height: auto;
     border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+/* Centered Delete Button */
+.item-card .delete-btn {
+    display: block;
+    margin: 15px auto 0 auto;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1.1em;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
+}
+
+.item-card .delete-btn:hover {
+    background-color: #c0392b;
 }
