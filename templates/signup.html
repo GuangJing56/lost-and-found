@@ -5,32 +5,41 @@
     <div class="form-container">
         <h1>Sign Up</h1>
 
-        <!-- Flash messages for errors/success -->
         {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            <div class="alerts">
-              {% for category, message in messages %}
-                <div class="alert {{ category }}">{{ message }}</div>
-              {% endfor %}
-            </div>
-          {% endif %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
         {% endwith %}
 
-        <form method="POST" novalidate>
+        <form method="POST">
             <div class="input-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required placeholder="Enter your username">
+                <label for="email">MMU Student Email:</label>
+                <input type="email" id="email" name="email"
+                       placeholder="you@student.mmu.edu.my"
+                       pattern="[a-zA-Z0-9._%+-]+@student\.mmu\.edu\.my"
+                       title="Use a valid @student.mmu.edu.my email"
+                       required>
             </div>
+
             <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required placeholder="Enter your password">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username"
+                       placeholder="Enter your username" required>
             </div>
+
+            <div class="input-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password"
+                       placeholder="Enter your password" required>
+            </div>
+
             <button type="submit">Sign Up</button>
         </form>
 
         <p class="switch-auth">
-            Already have an account?
-            <a href="{{ url_for('login') }}">Log In</a>
+            Already have an account? <a href="{{ url_for('login') }}">Login</a>
         </p>
     </div>
 </div>
