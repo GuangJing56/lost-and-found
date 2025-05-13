@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="form-container">
+        <h2>Email Verification</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <div class="input-group">
+                <label for="code">Enter the 6-digit code sent to your email:</label>
+                <input type="text" id="code" name="code" maxlength="6" required pattern="\d{6}" placeholder="123456">
+            </div>
+            <button type="submit">Verify Email</button>
+        </form>
+
+        <p class="switch-auth">
+            Didn't receive the code? <a href="{{ url_for('resend_code') }}">Resend Code</a>
+        </p>
+
+        <p id="timer" style="margin-top: 10px; font-size: 14px; color: #ccc;"></p>
+        <a href="{{ url_for('resend_code') }}" id="resendBtn" style="display: none;">Click here to resend the code</a>
+
+        <script>
+        const expirationTime = new Date("{{ expiration.isoformat() }}Z").getTime();
+        const timerDisplay = document.getElementById('timer');
+        const resendBtn = document.getElementById('resendBtn');
+
+        const countdown = setInterval(() => {
+            const now = new Date().getTime();
+            const remaining = expirationTime - now;
+
+            if (remaining <= 0) {
+                clearInterval(countdown);
+                timerDisplay.innerText = "Code has expired.";
+                resendBtn.style.display = "inline";
+                setTimeout(() => {
+                    window.location.href = resendBtn.href;
+                }, 10000);
+            } else {
+                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+                timerDisplay.innerText = `This code expires in ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }, 1000);
+        </script>
+    </div>
+</div>
+{% endblock %}
