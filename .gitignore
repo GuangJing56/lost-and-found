@@ -1,1 +1,26 @@
-.env
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+env/
+venv/
+
+# Flask config
+instance/
+*.env
+
+# VS Code
+.vscode/
+
+# Databases
+*.sqlite3
+*.db
+lost_found.db
+
+# Pytest
+.cache/
+
+# MacOS
+.DS_Store

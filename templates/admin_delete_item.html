@@ -1,0 +1,25 @@
+<!-- templates/admin_delete_item.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Item - Lost and Found</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Are you sure you want to delete this item?</h1>
+        <form method="POST">
+            <p><strong>{{ item.name }}</strong></p>
+            <p>{{ item.description }}</p>
+            <p>Phone: {{ item.phone }}</p>
+            {% if item.photo %}
+                <p><img src="{{ url_for('static', filename='uploads/' + item.photo) }}" alt="Item Photo" width="100"></p>
+            {% endif %}
+            <button type="submit">Delete Item</button>
+            <a href="{{ url_for('browse') }}">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!-- templates/edit_item.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Item - Lost and Found</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Item</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="input-group">
+                <label for="name">Item Name:</label>
+                <input type="text" id="name" name="name" value="{{ item.name }}" required>
+            </div>
+            <div class="input-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required>{{ item.description }}</textarea>
+            </div>
+            <div class="input-group">
+                <label for="phone">Phone Number:</label>
+                <input type="text" id="phone" name="phone" value="{{ item.phone }}" required>
+            </div>
+            <div class="input-group">
+                <label for="photo">New Photo (optional):</label>
+                <input type="file" id="photo" name="photo">
+                {% if item.photo %}
+                    <br><img src="{{ url_for('static', filename='uploads/' + item.photo) }}" alt="Item Photo" width="100">
+                {% endif %}
+            </div>
+            <button type="submit">Update Item</button>
+        </form>
+    </div>
+</body>
+</html>
