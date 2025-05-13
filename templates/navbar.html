@@ -1,15 +1,13 @@
-<!-- Navigation Bar -->
 <div class="navbar">
     <a href="{{ url_for('about') }}">About Us</a>
     {% if current_user.is_authenticated %}
-        <a href="{{ url_for('browse') }}">Browse</a>  <!-- Browse link for logged-in users -->
-        {% if current_user.is_admin %}  <!-- Check if user is admin -->
-            <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>  <!-- Admin Dashboard link -->
+        <a href="{{ url_for('browse') }}">Browse</a>
+        <a href="{{ url_for('add_item') }}">Add Item</a>
+        {% if current_user.is_admin %}
+            <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
         {% endif %}
-        <a href="{{ url_for('logout') }}">Logout</a>  <!-- Logout link for logged-in users -->
+        <a href="{{ url_for('logout') }}">Logout</a>
     {% else %}
-        <a href="{{ url_for('login') }}">Login</a>   <!-- Login link for guests -->
-        <a href="{{ url_for('signup') }}">Sign Up</a> <!-- Sign Up link for guests -->
+        <a href="{{ url_for('login') }}">Login</a>
     {% endif %}
-    <a href="{{ url_for('add_item') }}">Add Item</a>   <!-- Add Item link for all users -->
 </div>

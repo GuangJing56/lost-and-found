@@ -55,21 +55,28 @@ a:hover {
 
 /* About Section */
 .about-container {
-    text-align: center;
+    text-align: center;  /* Centers the text horizontally */
     padding: 100px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Vertically center the content */
+    align-items: center; /* Horizontally center the content */
+    height: 100vh; /* Makes the about section take full viewport height */
 }
 
 .about-container h1 {
     font-size: 42px;
     margin-bottom: 20px;
     color: #ffffff;
+    font-weight: 600;
 }
 
 .about-container p {
     font-size: 18px;
     color: #ccc;
-    max-width: 600px;
-    margin: 0 auto;
+    max-width: 800px; /* Ensures text doesn't stretch too wide */
+    margin: 0 auto; /* Centers the paragraph */
+    text-align: center; /* Centers the text inside the paragraph */
 }
 
 /* Form Styles */

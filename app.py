@@ -8,10 +8,9 @@ from werkzeug.utils import secure_filename
 from flask_migrate import Migrate
 
 migrate = Migrate()
-
-# Configuration
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+# Initialize the app and extensions
 def create_app():
     app = Flask(__name__, instance_relative_config=False)
     app.config.from_mapping(
@@ -26,14 +25,13 @@ def create_app():
 
     db.init_app(app)
     migrate.init_app(app, db)
-    login_manager.init_app(app, db)
+    login_manager.init_app(app)
     login_manager.login_view = 'login'
 
     with app.app_context():
         db.create_all()
 
     register_routes(app)
-
     return app
 
 # Extensions
@@ -45,7 +43,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
-    is_admin = db.Column(db.Boolean, default=False)  # Add this to identify admin users
+    is_admin = db.Column(db.Boolean, default=False)
     items = db.relationship('LostItem', backref='owner', lazy='dynamic')
 
 class LostItem(db.Model):
@@ -55,27 +53,8 @@ class LostItem(db.Model):
     phone = db.Column(db.String(20), nullable=False)
     photo = db.Column(db.String(200), nullable=True)
     date_reported = db.Column(db.DateTime, default=datetime.utcnow)
-    status = db.Column(db.String(50), default='lost')  # new field
+    status = db.Column(db.String(50), default='lost')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
-class Feedback(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    feedback_type = db.Column(db.String(100), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    date_submitted = db.Column(db.DateTime, default=datetime.utcnow)
-    resolved = db.Column(db.Boolean, default=False)  # Whether resolved
-    user = db.relationship('User', backref=db.backref('feedbacks', lazy=True))
-
-class Report(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    item_id = db.Column(db.Integer, db.ForeignKey('lost_item.id'), nullable=False)
-    reason = db.Column(db.String(200), nullable=False)
-    date_reported = db.Column(db.DateTime, default=datetime.utcnow)
-    resolved = db.Column(db.Boolean, default=False)  # Whether resolved
-    user = db.relationship('User', backref=db.backref('reports', lazy=True))
-    item = db.relationship('LostItem', backref=db.backref('reports', lazy=True))
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -108,6 +87,7 @@ def register_routes(app):
             return redirect(url_for('login'))
         return render_template('signup.html')
 
+    # Login Route
     @app.route('/login', methods=['GET', 'POST'])
     def login():
         if request.method == 'POST':
@@ -116,25 +96,26 @@ def register_routes(app):
             user = User.query.filter_by(username=username).first()
             if user and check_password_hash(user.password, password):
                 login_user(user)
-                # Redirect based on user type
-                if user.is_admin:
-                    return redirect(url_for('admin_dashboard'))
-                return redirect(url_for('browse'))
+                # After login, redirect to the appropriate page
+                return redirect(url_for('admin_dashboard') if user.is_admin else url_for('browse'))
             flash('Invalid credentials.', 'danger')
             return redirect(url_for('login'))
         return render_template('login.html')
 
+    # Logout Route
     @app.route('/logout')
     @login_required
     def logout():
         logout_user()
         return redirect(url_for('login'))
 
+    # Browse Route
     @app.route('/browse')
     def browse():
         items = LostItem.query.order_by(LostItem.date_reported.desc()).all()
         return render_template('browse.html', items=items)
 
+    # Add Item Route
     @app.route('/add_item', methods=['GET', 'POST'])
     @login_required
     def add_item():
@@ -151,15 +132,15 @@ def register_routes(app):
             if photo and allowed_file(photo.filename):
                 filename = secure_filename(photo.filename)
                 photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            item = LostItem(name=name, description=description,
-                            phone=phone, photo=filename,
-                            status=status, owner=current_user)
+            item = LostItem(name=name, description=description, phone=phone,
+                            photo=filename, status=status, owner=current_user)
             db.session.add(item)
             db.session.commit()
             flash('Item reported successfully.', 'success')
             return redirect(url_for('browse'))
         return render_template('add_item.html')
 
+    # Delete Item Route (for Admin)
     @app.route('/delete_item/<int:item_id>', methods=['POST'])
     @login_required
     def delete_item(item_id):
@@ -168,34 +149,10 @@ def register_routes(app):
         item = LostItem.query.get_or_404(item_id)
         db.session.delete(item)
         db.session.commit()
-        flash('Item deleted by admin.', 'success')
-        return redirect(url_for('browse'))
+        flash('Item deleted.', 'success')
+        return redirect(url_for('admin_dashboard'))
 
-    @app.route('/admin_signup', methods=['GET', 'POST'])
-    @login_required
-    def admin_signup():
-        if not current_user.is_admin:
-            flash('You do not have permission to access this page.', 'danger')
-            return redirect(url_for('login'))
-
-        if request.method == 'POST':
-            username = request.form['username'].strip()
-            password = request.form['password'].strip()
-            if not username or not password:
-                flash('Username and password cannot be empty.', 'danger')
-                return redirect(url_for('admin_signup'))
-            if User.query.filter_by(username=username).first():
-                flash('Username already exists.', 'danger')
-                return redirect(url_for('admin_signup'))
-            hashed = generate_password_hash(password)
-            user = User(username=username, password=hashed, is_admin=True)
-            db.session.add(user)
-            db.session.commit()
-            flash('Admin account created successfully.', 'success')
-            return redirect(url_for('login'))
-
-        return render_template('admin_signup.html')
-
+    # Admin Dashboard Route
     @app.route('/admin/dashboard', methods=['GET'])
     @login_required
     def admin_dashboard():
@@ -204,7 +161,6 @@ def register_routes(app):
 
         search_query = request.args.get('search', '').strip()
         filter_status = request.args.get('status', 'all')
-
         query = LostItem.query
 
         if search_query:
@@ -212,11 +168,10 @@ def register_routes(app):
                 (LostItem.name.ilike(f'%{search_query}%')) |
                 (LostItem.description.ilike(f'%{search_query}%'))
             )
-
         if filter_status != 'all':
             query = query.filter(LostItem.status == filter_status)
 
-        items = query.all()
+        items = query.order_by(LostItem.date_reported.desc()).all()
         return render_template('admin_dashboard.html', items=items)
 
     return app
@@ -224,4 +179,3 @@ def register_routes(app):
 if __name__ == '__main__':
     app = create_app()
     app.run(debug=True)
-
