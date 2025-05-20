@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container">
     <div class="form-container">
-        <h1>Sign Up</h1>
+        <h1>Create Your Account</h1>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -14,6 +14,7 @@
         {% endwith %}
 
         <form method="POST">
+            <!-- Email Input -->
             <div class="input-group">
                 <label for="email">MMU Student Email:</label>
                 <input type="email" id="email" name="email"
@@ -23,23 +24,27 @@
                        required>
             </div>
 
+            <!-- Username Input -->
             <div class="input-group">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username"
                        placeholder="Enter your username" required>
             </div>
 
+            <!-- Password Input -->
             <div class="input-group">
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password"
                        placeholder="Enter your password" required>
             </div>
 
+            <!-- Submit -->
             <button type="submit">Sign Up</button>
         </form>
 
         <p class="switch-auth">
-            Already have an account? <a href="{{ url_for('login') }}">Login</a>
+            Already have an account?
+            <a href="{{ url_for('login') }}">Login here</a>
         </p>
     </div>
 </div>
