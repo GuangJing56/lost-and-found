@@ -1,29 +1,38 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Dashboard</title>
-</head>
-<body>
-    {% include 'base.html' %}
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
     <h1>Admin Dashboard</h1>
-    <form method="get">
-        <input type="text" name="search" placeholder="Search items">
+
+    <!-- Filter Form -->
+    <form method="get" class="filter-form">
+        <input type="text" name="search" placeholder="Search by name or description" value="{{ request.args.get('search', '') }}">
         <select name="status">
-            <option value="all">All</option>
-            <option value="lost">Lost</option>
-            <option value="found">Found</option>
+            <option value="all" {% if request.args.get('status') == 'all' %}selected{% endif %}>All</option>
+            <option value="lost" {% if request.args.get('status') == 'lost' %}selected{% endif %}>Lost</option>
+            <option value="found" {% if request.args.get('status') == 'found' %}selected{% endif %}>Found</option>
         </select>
         <button type="submit">Filter</button>
     </form>
-    <ul>
+
+    {% if items %}
         {% for item in items %}
-            <li>
-                <strong>{{ item.name }}</strong> - {{ item.status }}
-                <form method="post" action="{{ url_for('delete_item', item_id=item.id) }}">
-                    <button type="submit" onclick="return confirm('Delete this item?')">Delete</button>
-                </form>
-            </li>
+        <div class="item-box">
+            <h3>{{ item.name }}</h3>
+            <p><strong>Status:</strong> {{ item.status }}</p>
+            <p><strong>Description:</strong> {{ item.description }}</p>
+            <p><strong>Phone:</strong> {{ item.phone }}</p>
+            {% if item.photo %}
+                <img src="{{ url_for('static', filename='uploads/' ~ item.photo) }}" width="200" alt="Item Photo">
+            {% endif %}
+            <p><strong>Reported:</strong> {{ item.date_reported.strftime('%d/%m/%Y') }}</p>
+            <form method="POST" action="{{ url_for('delete_item', item_id=item.id) }}">
+                <button type="submit" onclick="return confirm('Delete this item?')">Delete</button>
+            </form>
+        </div>
         {% endfor %}
-    </ul>
-</body>
-</html>
+    {% else %}
+        <p>No items found.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,32 +1,47 @@
-<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Lost and Found</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
 </head>
 <body>
     <!-- Navigation Bar -->
-    <div class="navbar">
-        <a href="{{ url_for('about') }}">About Us</a>
-        {% if current_user.is_authenticated %}
-            <a href="{{ url_for('browse') }}">Browse</a>
-            <a href="{{ url_for('add_item') }}">Add Item</a>
-            {% if current_user.is_admin %}
-                <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
+    <nav class="navbar">
+        <div class="nav-left">
+            <a class="brand" href="{{ url_for('about') }}">Lost & Found</a>
+        </div>
+        <div class="nav-right">
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('browse') }}">Browse</a>
+                <a href="{{ url_for('add_item') }}">Add Item</a>
+                <a href="{{ url_for('submit_feedback') }}">Feedback</a>
+                {% if current_user.is_admin %}
+                    <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
+                {% endif %}
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('signup') }}">Sign Up</a>
             {% endif %}
-            <a href="{{ url_for('logout') }}">Logout</a>
-        {% else %}
-            <a href="{{ url_for('login') }}">Login</a>
-            <a href="{{ url_for('signup') }}">Sign Up</a>
-        {% endif %}
-    </div>
+        </div>
+    </nav>
 
-    <!-- Page Content -->
-    <div class="container">
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                    <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content Area -->
+    <main class="main-content">
         {% block content %}{% endblock %}
-    </div>
+    </main>
 </body>
 </html>
