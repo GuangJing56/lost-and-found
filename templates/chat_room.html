@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Chat with {{ other_user.username }}{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+
+  <header class="chat-header">
+    <h2>Chat with {{ other_user.username }}</h2>
+    <a href="{{ url_for('chat') }}" class="back-link">&larr; Back</a>
+  </header>
+
+  <div id="chat-box" class="chat-box">
+    {% for msg in messages %}
+      <div class="chat-message {{ 'sent' if msg.sender_id == current_user.id else 'received' }}">
+        <div class="message-content">
+          <p>{{ msg.message }}</p>
+          <span class="message-time">{{ msg.timestamp.strftime('%H:%M') }}</span>
+        </div>
+      </div>
+    {% else %}
+      <p class="no-messages">No messages yet. Say hello!</p>
+    {% endfor %}
+  </div>
+
+  <form method="POST" class="chat-form">
+    <textarea name="message" rows="2" placeholder="Type your message..." required></textarea>
+    <button type="submit" aria-label="Send message">&#9658;</button>
+  </form>
+
+</div>
+
+<script>
+  // Auto scroll chat box to bottom
+  const chatBox = document.getElementById('chat-box');
+  chatBox.scrollTop = chatBox.scrollHeight;
+</script>
+{% endblock %}

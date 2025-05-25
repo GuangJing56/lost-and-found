@@ -1,7 +1,7 @@
 import os
 import random
 from datetime import datetime, timedelta
-from flask import Flask, render_template, request, redirect, url_for, flash, abort, session, current_app
+from flask import Flask, render_template, request, redirect, url_for, flash, abort, session, current_app, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_mail import Mail, Message
@@ -74,6 +74,8 @@ class User(UserMixin, db.Model):
     items = db.relationship('LostItem', backref='owner', lazy=True)
     feedbacks = db.relationship('Feedback', backref='user', lazy=True)
     reports = db.relationship('Report', backref='user', lazy=True)
+    messages_sent = db.relationship('ChatMessage', backref='sender', lazy=True, foreign_keys='ChatMessage.sender_id')
+    messages_received = db.relationship('ChatMessage', backref='receiver', lazy=True, foreign_keys='ChatMessage.receiver_id')
 
 class LostItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -99,6 +101,14 @@ class Report(db.Model):
     item_id = db.Column(db.Integer, db.ForeignKey('lost_item.id', ondelete='CASCADE'), nullable=False)
     reason = db.Column(db.Text, nullable=False)
     date_reported = db.Column(db.DateTime, default=datetime.utcnow)
+
+# New ChatMessage model
+class ChatMessage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -350,6 +360,65 @@ def register_routes(app):
             return redirect(url_for('browse'))
         return render_template('report_item.html', item=item)
 
-if __name__ == "__main__":
+    # Chat routes
+    @app.route('/chat')
+    @login_required
+    def chat():
+        # List all users except current user to chat with
+        users = User.query.filter(User.id != current_user.id).all()
+        return render_template('chat.html', users=users)
+
+    @app.route('/chat/<int:user_id>', methods=['GET', 'POST'])
+    @login_required
+    def chat_with(user_id):
+        other_user = User.query.get_or_404(user_id)
+        if other_user.id == current_user.id:
+            flash("You cannot chat with yourself.", "warning")
+            return redirect(url_for('chat'))
+
+        if request.method == 'POST':
+            message_text = request.form['message'].strip()
+            if message_text:
+                message = ChatMessage(sender_id=current_user.id,
+                                      receiver_id=other_user.id,
+                                      message=message_text)
+                db.session.add(message)
+                db.session.commit()
+                return redirect(url_for('chat_with', user_id=other_user.id))
+
+        # Get messages between the two users ordered by timestamp ascending
+        messages = ChatMessage.query.filter(
+            ((ChatMessage.sender_id == current_user.id) & (ChatMessage.receiver_id == other_user.id)) |
+            ((ChatMessage.sender_id == other_user.id) & (ChatMessage.receiver_id == current_user.id))
+        ).order_by(ChatMessage.timestamp.asc()).all()
+
+        return render_template('chat_room.html', other_user=other_user, messages=messages)
+
+    # API endpoint to fetch new messages via AJAX for live chat (optional)
+    @app.route('/chat/messages/<int:user_id>')
+    @login_required
+    def chat_messages(user_id):
+        other_user = User.query.get_or_404(user_id)
+        last_id = request.args.get('last_id', 0, type=int)
+
+        messages = ChatMessage.query.filter(
+            (((ChatMessage.sender_id == current_user.id) & (ChatMessage.receiver_id == other_user.id)) |
+             ((ChatMessage.sender_id == other_user.id) & (ChatMessage.receiver_id == current_user.id))) &
+            (ChatMessage.id > last_id)
+        ).order_by(ChatMessage.timestamp.asc()).all()
+
+        messages_data = [
+            {
+                "id": m.id,
+                "sender": m.sender.username,
+                "message": m.message,
+                "timestamp": m.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+                "is_sender": (m.sender_id == current_user.id)
+            } for m in messages
+        ]
+
+        return jsonify(messages_data)
+
+if __name__ == '__main__':
     app = create_app()
     app.run(debug=True)

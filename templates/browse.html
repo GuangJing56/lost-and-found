@@ -1,74 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Browse Items - Lost and Found</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <!-- Navigation Bar -->
-    <div class="navbar">
-        <a href="{{ url_for('about') }}">About Us</a>
-        {% if current_user.is_authenticated %}
-            <a href="{{ url_for('browse') }}">Browse</a>
-            <a href="{{ url_for('add_item') }}">Add Item</a>
-            <a href="{{ url_for('submit_feedback') }}">Feedback</a>
-            {% if current_user.is_admin %}
-                <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
-            {% endif %}
-            <a href="{{ url_for('logout') }}">Logout</a>
-        {% else %}
-            <a href="{{ url_for('login') }}">Login</a>
-        {% endif %}
-    </div>
+{% extends "base.html" %}
 
-    <!-- Browse Items Section -->
-    <div class="container">
-        <h1>Browse Lost & Found Items</h1>
+{% block title %}Browse Items - Lost and Found{% endblock %}
 
-        <!-- Filter/Search Form -->
-        <form method="get" class="filter-form">
-            <input type="text" name="search" placeholder="Search by name/description" value="{{ request.args.get('search', '') }}">
-            <select name="status">
-                <option value="all" {% if request.args.get('status') == 'all' %}selected{% endif %}>All</option>
-                <option value="lost" {% if request.args.get('status') == 'lost' %}selected{% endif %}>Lost</option>
-                <option value="found" {% if request.args.get('status') == 'found' %}selected{% endif %}>Found</option>
-            </select>
-            <input type="date" name="date" value="{{ request.args.get('date', '') }}">
-            <button type="submit">Apply Filters</button>
-        </form>
+{% block content %}
+<div class="container">
+    <h1>Browse Lost & Found Items</h1>
 
-        <!-- Items Display -->
-        {% if items %}
-            <div class="items-list">
-                {% for item in items %}
-                    <div class="item-card">
-                        <h3>{{ item.name }}</h3>
-                        <p>{{ item.description }}</p>
-                        {% if item.photo %}
-                            <div class="item-photo">
-                                <img src="{{ url_for('static', filename='uploads/' + item.photo) }}" alt="Item Photo" class="item-img">
-                            </div>
-                        {% endif %}
-                        <p><strong>Phone:</strong> {{ item.phone }}</p>
-                        <p><strong>Status:</strong> {{ item.status }}</p>
-                        <p><strong>Date:</strong> {{ item.date_reported.strftime('%d/%m/%Y') }}</p>
+    <!-- Filter/Search Form -->
+    <form method="get" class="filter-form">
+        <input type="text" name="search" placeholder="Search by name/description" value="{{ request.args.get('search', '') }}">
+        <select name="status">
+            <option value="all" {% if request.args.get('status') == 'all' %}selected{% endif %}>All</option>
+            <option value="lost" {% if request.args.get('status') == 'lost' %}selected{% endif %}>Lost</option>
+            <option value="found" {% if request.args.get('status') == 'found' %}selected{% endif %}>Found</option>
+        </select>
+        <input type="date" name="date" value="{{ request.args.get('date', '') }}">
+        <button type="submit">Apply Filters</button>
+    </form>
 
-                        {% if current_user.is_authenticated and current_user.is_admin %}
-                            <form action="{{ url_for('delete_item', item_id=item.id) }}" method="post" style="display:inline;">
-                                <button type="submit" onclick="return confirm('Are you sure you want to delete this item?')">Delete</button>
-                            </form>
-                        {% endif %}
+    <!-- Items Display -->
+    {% if items %}
+        <div class="items-list">
+            {% for item in items %}
+                <div class="item-card">
+                    <h3>{{ item.name }}</h3>
+                    <p>{{ item.description }}</p>
+                    {% if item.photo %}
+                        <div class="item-photo">
+                            <img src="{{ url_for('static', filename='uploads/' + item.photo) }}" alt="Item Photo" class="item-img">
+                        </div>
+                    {% endif %}
+                    <p><strong>Phone:</strong> {{ item.phone }}</p>
+                    <p><strong>Status:</strong> {{ item.status }}</p>
+                    <p><strong>Date:</strong> {{ item.date_reported.strftime('%d/%m/%Y') }}</p>
 
-                        <a href="{{ url_for('report_item', item_id=item.id) }}" class="btn btn-danger">Report</a>
+                    {% if current_user.is_authenticated and current_user.is_admin %}
+                        <form action="{{ url_for('delete_item', item_id=item.id) }}" method="post" style="display:inline;">
+                            <button type="submit" onclick="return confirm('Are you sure you want to delete this item?')">Delete</button>
+                        </form>
+                    {% endif %}
 
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <p>No items found matching your criteria.</p>
-        {% endif %}
-    </div>
-</body>
-</html>
+                    <a href="{{ url_for('report_item', item_id=item.id) }}" class="btn btn-danger">Report</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No items found matching your criteria.</p>
+    {% endif %}
+</div>
+{% endblock %}

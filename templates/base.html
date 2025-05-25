@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Lost and Found</title>
+    <title>{% block title %}Lost and Found{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
 </head>
 <body>
@@ -17,6 +17,7 @@
                 <a href="{{ url_for('browse') }}">Browse</a>
                 <a href="{{ url_for('add_item') }}">Add Item</a>
                 <a href="{{ url_for('submit_feedback') }}">Feedback</a>
+                <a href="{{ url_for('chat') }}">Chat</a>  <!-- Chat Link -->
                 {% if current_user.is_admin %}
                     <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
                 {% endif %}
@@ -39,7 +40,7 @@
         {% endif %}
     {% endwith %}
 
-    <!-- Main Content Area -->
+    <!-- Main Content -->
     <main class="main-content">
         {% block content %}{% endblock %}
     </main>
