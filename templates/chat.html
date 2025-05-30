@@ -2,25 +2,27 @@
 {% block title %}Chat Users{% endblock %}
 
 {% block content %}
-<h2>Chat with Users</h2>
+<h2 style="color: #fff;">Chat with Users</h2>
 
 <!-- Search box to filter users -->
-<input type="text" id="userSearch" placeholder="Search users..." onkeyup="filterUsers()" style="margin-bottom: 12px; padding: 6px; width: 100%; max-width: 400px;">
+<input type="text" id="userSearch" placeholder="Search users..." onkeyup="filterUsers()" 
+       style="margin-bottom: 12px; padding: 6px; width: 100%; max-width: 400px; border-radius: 6px; border: 1px solid #444; background-color: #222; color: #fff;">
 
-<div class="user-list-container" style="max-width: 400px;">
+<div class="chat-user-list user-list-container" style="max-width: 400px;">
   <ul id="userList" style="list-style: none; padding: 0;">
     {% for user in users %}
-      <li style="margin-bottom: 8px; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
-        <a href="{{ url_for('chat_with', user_id=user.id) }}" style="text-decoration: none; color: #333;">
+      <li style="margin-bottom: 8px; padding: 8px; border: 1px solid #444; border-radius: 6px; background-color: rgba(0,0,0,0.7);">
+        <a href="{{ url_for('chat_with', user_id=user.id) }}" 
+           style="text-decoration: none; color: #fff; display: flex; align-items: center;">
           <!-- User status circle -->
           <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; 
-            background-color: {% if user.is_online %}green{% else %}gray{% endif %}; 
+            background-color: {% if user.is_online %}#4caf50{% else %}#757575{% endif %}; 
             margin-right: 8px;"></span>
           {{ user.username }}
         </a>
       </li>
     {% else %}
-      <li>No other users available to chat.</li>
+      <li style="color: #fff;">No other users available to chat.</li>
     {% endfor %}
   </ul>
 </div>

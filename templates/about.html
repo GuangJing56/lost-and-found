@@ -1,9 +1,41 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="about-container">
+<main class="about-container" role="main" aria-label="About Lost & Found System">
     <h1>Welcome to the Lost & Found System</h1>
-    <p>This platform helps students and staff report, find, and track lost and found items across the campus.</p>
-    <p>To report or manage items, please <a href="{{ url_for('login') }}">log in</a> or <a href="{{ url_for('signup') }}">sign up</a>.</p>
-</div>
+
+    <p>
+        This platform is designed to help students and staff easily report, find, and track lost and found items across the campus.
+    </p>
+
+    <section class="how-to-use" aria-labelledby="how-to-use-title">
+        <h2 id="how-to-use-title">How to Use the System</h2>
+        <ol>
+            <li><strong>Create an account:</strong> Please <a href="{{ url_for('signup') }}">sign up</a> or <a href="{{ url_for('login') }}">log in</a> if you already have one.</li>
+            <li><strong>Report a Lost Item:</strong> If you lose something, <a href="{{ url_for('add_item') }}">add a lost item report</a> describing your item with as much detail as possible (color, brand, unique marks).</li>
+            <li><strong>Report a Found Item:</strong> If you find an item, please <a href="{{ url_for('add_item') }}">add a found item report</a> to help reunite it with its owner.</li>
+            <li><strong>Browse Items:</strong> Check the <a href="{{ url_for('browse') }}">browse page</a> regularly to see if your lost item has been found.</li>
+            <li><strong>Contact:</strong> Use the <a href="{{ url_for('chat') }}">chat feature</a> to communicate with the person who reported the item.</li>
+        </ol>
+    </section>
+
+    <section class="tips" aria-labelledby="tips-title">
+        <h2 id="tips-title">Important Tips if You Lose Something</h2>
+        <ul>
+            <li>Report your lost item here as soon as possible.</li>
+            <li>Stop or temporarily freeze any lost credit/debit cards immediately by contacting your bank.</li>
+            <li>Change passwords for any online accounts if your phone or laptop is lost.</li>
+            <li>Keep an eye on your email or chat messages for any updates or found items matching your description.</li>
+            <li>Visit the campus Lost & Found office if needed.</li>
+        </ul>
+    </section>
+
+    <section class="final-note" aria-labelledby="final-note-title">
+        <h2 id="final-note-title">Thank You for Helping Keep Our Campus Safe</h2>
+        <p>
+            By using this system, you’re helping create a more secure and connected community.
+            If you have any questions or need assistance, please don’t hesitate to contact our support team.
+        </p>
+    </section>
+</main>
 {% endblock %}

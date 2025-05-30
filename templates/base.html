@@ -69,7 +69,17 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        {% block content %}{% endblock %}
+        {% block content %}
+        <div class="profile-container">
+    <div class="profile-card">
+        <img src="{{ url_for('static', filename=user.profile_pic) }}" alt="User Profile Picture" class="profile-img" />
+        <h2>{{ user.name }}</h2>
+        <p class="profile-email">{{ user.email }}</p>
+        <p class="profile-bio">{{ user.bio or "No bio available." }}</p>
+        <a href="{{ url_for('edit_profile') }}" class="btn-edit">Edit Profile</a>
+    </div>
+</div>
+        {% endblock %}
     </main>
 </body>
 </html>

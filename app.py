@@ -359,6 +359,7 @@ def register_routes(app):
             flash('Report submitted. Admin will review it.', 'info')
             return redirect(url_for('browse'))
         return render_template('report_item.html', item=item)
+        
 
     # Chat routes
     @app.route('/chat')
