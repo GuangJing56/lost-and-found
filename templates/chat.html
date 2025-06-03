@@ -15,9 +15,11 @@
         <a href="{{ url_for('chat_with', user_id=user.id) }}" 
            style="text-decoration: none; color: #fff; display: flex; align-items: center;">
           <!-- User status circle -->
-          <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; 
-            background-color: {% if user.is_online %}#4caf50{% else %}#757575{% endif %}; 
-            margin-right: 8px;"></span>
+          {% if user.is_online %}
+            <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: #4caf50; margin-right: 8px;"></span>
+          {% else %}
+            <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: #757575; margin-right: 8px;"></span>
+          {% endif %}
           {{ user.username }}
         </a>
       </li>

@@ -18,6 +18,38 @@
         <button type="submit">Apply Filters</button>
     </form>
 
+    <!-- MAP SECTION -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <div id="map" style="height: 400px; margin: 20px 0; border-radius: 10px;"></div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([3.1390, 101.6869], 12);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Prepare marker data in a JS array
+        var markers = [
+            {% for item in items %}
+                {% if item.latitude and item.longitude %}
+                    {
+                        lat: {{ item.latitude }},
+                        lng: {{ item.longitude }},
+                        name: "{{ item.name|e }}",
+                        description: "{{ item.description|e }}",
+                        status: "{{ item.status|e }}"
+                    },
+                {% endif %}
+            {% endfor %}
+        ];
+
+        markers.forEach(function(marker) {
+            L.marker([marker.lat, marker.lng]).addTo(map)
+                .bindPopup("<strong>" + marker.name + "</strong><br>" + marker.description + "<br>Status: " + marker.status);
+        });
+    </script>
+
     <!-- Items Display -->
     {% if items %}
         <div class="items-list">
@@ -27,7 +59,7 @@
                     <p>{{ item.description }}</p>
                     {% if item.photo %}
                         <div class="item-photo">
-                            <img src="{{ url_for('static', filename='uploads/' + item.photo) }}" alt="Item Photo" class="item-img">
+                            <img src="{{ url_for('static', filename='uploads/' + item.photo) }}" alt="Item Photo" class="item-img" style="max-width: 200px; border-radius: 8px;">
                         </div>
                     {% endif %}
                     <p><strong>Phone:</strong> {{ item.phone }}</p>

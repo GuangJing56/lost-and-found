@@ -76,6 +76,7 @@ class User(UserMixin, db.Model):
     reports = db.relationship('Report', backref='user', lazy=True)
     messages_sent = db.relationship('ChatMessage', backref='sender', lazy=True, foreign_keys='ChatMessage.sender_id')
     messages_received = db.relationship('ChatMessage', backref='receiver', lazy=True, foreign_keys='ChatMessage.receiver_id')
+    
 
 class LostItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -87,6 +88,8 @@ class LostItem(db.Model):
     status = db.Column(db.String(50), default='lost')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     reports = db.relationship('Report', backref='item', lazy=True, cascade="all, delete-orphan")
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
 
 class Feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -247,23 +250,24 @@ def register_routes(app):
         query = LostItem.query.order_by(LostItem.date_reported.desc())
 
         if search:
-            query = query.filter(
-                (LostItem.name.ilike(f'%{search}%')) |
-                (LostItem.description.ilike(f'%{search}%'))
-            )
+           query = query.filter(
+            (LostItem.name.ilike(f'%{search}%')) |
+            (LostItem.description.ilike(f'%{search}%'))
+        )
         if status != 'all':
-            query = query.filter_by(status=status)
+           query = query.filter_by(status=status)
         if date_str:
-            try:
-                date = datetime.strptime(date_str, '%Y-%m-%d')
-                query = query.filter(
-                    db.func.date(LostItem.date_reported) == date.date()
-                )
-            except ValueError:
-                flash('Invalid date format. Use YYYY-MM-DD.', 'warning')
+          try:
+              date = datetime.strptime(date_str, '%Y-%m-%d')
+              query = query.filter(
+                db.func.date(LostItem.date_reported) == date.date()
+            )
+          except ValueError:
+            flash('Invalid date format. Use YYYY-MM-DD.', 'warning')
 
         items = query.all()
         return render_template('browse.html', items=items)
+
 
     @app.route('/add_item', methods=['GET', 'POST'])
     @login_required

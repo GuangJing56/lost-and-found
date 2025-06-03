@@ -1,39 +1,70 @@
 {% extends "base.html" %}
 
 {% block content %}
+<!-- Include Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" />
+
 <main class="about-container" role="main" aria-label="About Lost & Found System">
     <h1>Welcome to the Lost & Found System</h1>
 
+    <section class="important-note" aria-labelledby="important-note-title" style="background-color:#080808; padding:15px; border-left:5px solid #0c0c0c; margin-bottom:20px;">
+        <h2 id="important-note-title" style="color:#856404;">Important Notice</h2>
+        <p>
+            This Lost & Found system is <strong>exclusively for MMU students and staff.</strong> Access and reporting are limited to authorized campus members only. 
+            If you are not part of MMU or cannot find your lost item in this system, please visit the campus Lost & Found office directly for assistance.
+        </p>
+    </section>
+
     <p>
-        This platform is designed to help students and staff easily report, find, and track lost and found items across the campus.
+        This platform is designed to help students and staff easily report, find, and track lost and found items across the campus. 
+        Our goal is to reunite lost belongings with their rightful owners quickly and efficiently.
     </p>
 
     <section class="how-to-use" aria-labelledby="how-to-use-title">
         <h2 id="how-to-use-title">How to Use the System</h2>
-        <ol>
-            <li><strong>Create an account:</strong> Please <a href="{{ url_for('signup') }}">sign up</a> or <a href="{{ url_for('login') }}">log in</a> if you already have one.</li>
-            <li><strong>Report a Lost Item:</strong> If you lose something, <a href="{{ url_for('add_item') }}">add a lost item report</a> describing your item with as much detail as possible (color, brand, unique marks).</li>
-            <li><strong>Report a Found Item:</strong> If you find an item, please <a href="{{ url_for('add_item') }}">add a found item report</a> to help reunite it with its owner.</li>
-            <li><strong>Browse Items:</strong> Check the <a href="{{ url_for('browse') }}">browse page</a> regularly to see if your lost item has been found.</li>
-            <li><strong>Contact:</strong> Use the <a href="{{ url_for('chat') }}">chat feature</a> to communicate with the person who reported the item.</li>
-        </ol>
+        <p>
+           1. To get started, <i class="fa-solid fa-user-plus" style="color: #007bff; margin-left:5px; margin-right:5px;"></i>
+            <strong><a href="{{ url_for('signup') }}">Sign Up</a></strong> or if you already have an account, <i class="fa-solid fa-right-to-bracket" style="color: #007bff; margin-left:5px; margin-right:5px;"></i>
+            <strong><a href="{{ url_for('login') }}">Log In</a></strong> to access all features.
+        </p>
+        <p>
+           2. If you have lost an item, use the <i class="fa-solid fa-plus-circle" style="color: #28a745; margin-left:5px; margin-right:5px;"></i>
+            <strong><a href="{{ url_for('add_item') }}">Add Item</a></strong> page to report it. Be sure to select “Lost” as the status and provide detailed descriptions and location by clicking on the map.
+        </p>
+        <p>
+           3. Found something? Report it by going to the same <i class="fa-solid fa-plus-circle" style="color: #ffc107; margin-left:5px; margin-right:5px;"></i>
+            <strong><a href="{{ url_for('add_item') }}">Add Item</a></strong> page, choose “Found” as the status, and fill in details about the item and location.
+        </p>
+        <p>
+            4.To look for lost or found items, visit the <i class="fa-solid fa-magnifying-glass" style="color: #17a2b8; margin-left:5px; margin-right:5px;"></i>
+            <strong><a href="{{ url_for('browse') }}">Browse</a></strong> page where you can search or filter items by date, status, or keywords.
+        </p>
+        <p>
+           5. Once you find a matching item, contact the reporter directly via the <i class="fa-solid fa-comments" style="color: #6f42c1; margin-left:5px; margin-right:5px;"></i>
+            <strong><a href="{{ url_for('chat') }}">Chat</a></strong> feature to arrange pickup or ask questions.
+        </p>
+        <p>
+            6.After retrieving or returning an item, please update its status to <i class="fa-solid fa-check-circle" style="color: #28a745; margin-left:5px; margin-right:5px;"></i>
+            <strong>Returned</strong> to keep the system up-to-date for all users.
+        </p>
     </section>
 
     <section class="tips" aria-labelledby="tips-title">
         <h2 id="tips-title">Important Tips if You Lose Something</h2>
         <ul>
-            <li>Report your lost item here as soon as possible.</li>
+            <li>Report your lost item here as soon as possible to increase chances of recovery.</li>
             <li>Stop or temporarily freeze any lost credit/debit cards immediately by contacting your bank.</li>
-            <li>Change passwords for any online accounts if your phone or laptop is lost.</li>
+            <li>Change passwords for any online accounts if your phone, laptop, or other devices are lost.</li>
             <li>Keep an eye on your email or chat messages for any updates or found items matching your description.</li>
-            <li>Visit the campus Lost & Found office if needed.</li>
+            <li>Visit the campus Lost & Found office if needed for in-person assistance.</li>
+            <li>Always provide accurate and detailed descriptions to help others identify your item.</li>
         </ul>
     </section>
 
     <section class="final-note" aria-labelledby="final-note-title">
         <h2 id="final-note-title">Thank You for Helping Keep Our Campus Safe</h2>
         <p>
-            By using this system, you’re helping create a more secure and connected community.
+            By using this system, you’re helping create a more secure and connected community. 
             If you have any questions or need assistance, please don’t hesitate to contact our support team.
         </p>
     </section>
