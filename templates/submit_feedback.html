@@ -1,6 +1,38 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="container">
+    <div class="form-container">
+        <h2>Submit Feedback</h2>
+        <form method="POST">
+            <div class="input-group">
+                <label for="content">Your Feedback:</label>
+                <textarea id="content" name="content" required></textarea>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div class="feedback-list" style="margin-top: 40px;">
+        <h2>All Feedback</h2>
+        {% if feedbacks %}
+            {% for fb in feedbacks %}
+            <div class="card">
+                <p><strong>Feedback:</strong> {{ fb.content }}</p>
+                <p><strong>Rating:</strong> 👍 {{ fb.upvotes }} | 👎 {{ fb.downvotes }}</p>
+                {% if fb.user %}
+                    <p><strong>Submitted by:</strong> {{ fb.user.username }}</p>
+                {% endif %}
+                <div>
+                    <a href="{{ url_for('upvote', feedback_id=fb.id) }}" class="btn">👍 Upvote</a>
+                    <a href="{{ url_for('downvote', feedback_id=fb.id) }}" class="btn">👎 Downvote</a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No feedback submitted yet.</p>
+        {% endif %}
+    </div>
 <div class="form-container">
     <h2>Submit Feedback</h2>
     <form method="POST">
@@ -12,10 +44,23 @@
                 <option value="Other">Other</option>
             </select>
         </div>
+
         <div class="input-group">
             <label for="content">Message:</label>
-            <textarea id="content" name="content" required></textarea>
+            <textarea id="content" name="content" rows="4" required></textarea>
         </div>
+
+        <div class="input-group">
+            <label for="rating">Rating:</label>
+            <div id="rating" class="rating-group">
+                <input type="radio" name="rating" value="1" id="star1" required><label for="star1">★</label>
+                <input type="radio" name="rating" value="2" id="star2"><label for="star2">★</label>
+                <input type="radio" name="rating" value="3" id="star3"><label for="star3">★</label>
+                <input type="radio" name="rating" value="4" id="star4"><label for="star4">★</label>
+                <input type="radio" name="rating" value="5" id="star5"><label for="star5">★</label>
+            </div>
+        </div>
+
         <button type="submit">Submit</button>
     </form>
 </div>
