@@ -1,21 +1,37 @@
 {% extends "base.html" %}
+
 {% block content %}
-<div class="form-container">
-    <h2>Submit Feedback</h2>
-    <form method="POST">
-        <div class="input-group">
-            <label for="feedback_type">Type:</label>
-            <select name="feedback_type" id="feedback_type" required>
-                <option value="Bug">Bug</option>
-                <option value="Suggestion">Suggestion</option>
-                <option value="Other">Other</option>
-            </select>
-        </div>
-        <div class="input-group">
-            <label for="content">Message:</label>
-            <textarea id="content" name="content" required></textarea>
-        </div>
-        <button type="submit">Submit</button>
-    </form>
+<div class="container">
+    <div class="form-container">
+        <h2>Submit Feedback</h2>
+        <form method="POST">
+            <div class="input-group">
+                <label for="content">Your Feedback:</label>
+                <textarea id="content" name="content" required></textarea>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div class="feedback-list" style="margin-top: 40px;">
+        <h2>All Feedback</h2>
+        {% if feedbacks %}
+            {% for fb in feedbacks %}
+            <div class="card">
+                <p><strong>Feedback:</strong> {{ fb.content }}</p>
+                <p><strong>Rating:</strong> 👍 {{ fb.upvotes }} | 👎 {{ fb.downvotes }}</p>
+                {% if fb.user %}
+                    <p><strong>Submitted by:</strong> {{ fb.user.username }}</p>
+                {% endif %}
+                <div>
+                    <a href="{{ url_for('upvote', feedback_id=fb.id) }}" class="btn">👍 Upvote</a>
+                    <a href="{{ url_for('downvote', feedback_id=fb.id) }}" class="btn">👎 Downvote</a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No feedback submitted yet.</p>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

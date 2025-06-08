@@ -21,6 +21,21 @@
             <input type="file" id="photo" name="photo">
         </div>
         <div class="input-group">
+            <label for="location">Location Found:</label>
+            <input type="text" id="location" name="location" required>
+        </div>
+        <div class="input-group">
+            <label for="category">Category:</label>
+            <select name="category" required>
+                <option value="phone">Phone</option>
+                <option value="wallet">Wallet</option>
+                <option value="laptop">Laptop</option>
+                <option value="bag">Bag</option>
+                <option value="key">Key</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        <div class="input-group">
             <label for="status">Status:</label>
             <select id="status" name="status">
                 <option value="lost">Lost</option>

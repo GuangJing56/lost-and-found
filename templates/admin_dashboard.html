@@ -15,6 +15,14 @@
         <button type="submit">Filter</button>
     </form>
 
+    <!-- Export Buttons -->
+    <div style="margin-top: 10px;">
+        <a href="{{ url_for('download_pdf') }}" class="btn btn-secondary">Export as PDF</a>
+        <a href="{{ url_for('download_csv') }}" class="btn btn-secondary">Export as CSV</a>
+    </div>
+
+    <!-- Lost Items List -->
+    <h2 style="margin-top: 30px;">Lost & Found Items</h2>
     {% if items %}
         {% for item in items %}
         <div class="item-box">
@@ -22,10 +30,10 @@
             <p><strong>Status:</strong> {{ item.status }}</p>
             <p><strong>Description:</strong> {{ item.description }}</p>
             <p><strong>Phone:</strong> {{ item.phone }}</p>
+            <p><strong>Date:</strong> {{ item.date_reported.strftime('%d/%m/%Y') }}</p>
             {% if item.photo %}
                 <img src="{{ url_for('static', filename='uploads/' ~ item.photo) }}" width="200" alt="Item Photo">
             {% endif %}
-            <p><strong>Reported:</strong> {{ item.date_reported.strftime('%d/%m/%Y') }}</p>
             <form method="POST" action="{{ url_for('delete_item', item_id=item.id) }}">
                 <button type="submit" onclick="return confirm('Delete this item?')">Delete</button>
             </form>
@@ -33,6 +41,87 @@
         {% endfor %}
     {% else %}
         <p>No items found.</p>
+    {% endif %}
+
+    <!-- Feedback Section -->
+    <h2 style="margin-top: 40px;">User Feedback</h2>
+    {% if feedbacks %}
+        {% for feedback in feedbacks %}
+        <div class="item-box">
+            <p><strong>From:</strong> {{ feedback.user.username }}</p>
+            <p><strong>Type:</strong> {{ feedback.feedback_type }}</p>
+            <p><strong>Submitted:</strong> {{ feedback.date_submitted.strftime('%d/%m/%Y') }}</p>
+            <p>{{ feedback.content }}</p>
+            <form method="POST" action="{{ url_for('delete_feedback', feedback_id=feedback.id) }}">
+                <button type="submit" onclick="return confirm('Delete this feedback?')">Delete</button>
+            </form>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No feedback submitted yet.</p>
+    {% endif %}
+
+    <!-- Reports Section -->
+    <h2 style="margin-top: 40px;">Item Reports</h2>
+    {% if reports %}
+        {% for report in reports %}
+        <div class="item-box">
+            <p><strong>From:</strong> {{ report.user.username }}</p>
+            <p><strong>Item:</strong> {{ report.item.name }}</p>
+            <p><strong>Reason:</strong> {{ report.reason }}</p>
+            <p><strong>Reported:</strong> {{ report.date_reported.strftime('%d/%m/%Y') }}</p>
+            <form method="POST" action="{{ url_for('delete_report', report_id=report.id) }}">
+                <button type="submit" onclick="return confirm('Delete this report?')">Delete</button>
+            </form>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No reports submitted yet.</p>
+    {% endif %}
+
+    <!-- User Warning & Ban Management -->
+    <h2 style="margin-top: 40px;">User Warnings & Bans</h2>
+    {% if users %}
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Warnings</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.warnings }}</td>
+                <td>
+                    {% if user.is_banned %}
+                        <span style="color:red;">Banned</span>
+                    {% else %}
+                        Active
+                    {% endif %}
+                </td>
+                <td>
+                    {% if not user.is_banned %}
+                        <form method="POST" action="{{ url_for('warn_user', user_id=user.id) }}" style="display:inline;">
+                            <button type="submit" onclick="return confirm('Warn this user?')">Warn</button>
+                        </form>
+                    {% else %}
+                        <form method="POST" action="{{ url_for('unban_user', user_id=user.id) }}" style="display:inline;">
+                            <button type="submit" onclick="return confirm('Unban this user?')">Unban</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No users found.</p>
     {% endif %}
 </div>
 {% endblock %}
