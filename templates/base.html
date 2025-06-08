@@ -3,27 +3,55 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Lost and Found</title>
+    <title>{% block title %}Lost and Found{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
 </head>
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="nav-left">
-            <a class="brand" href="{{ url_for('about') }}">Lost & Found</a>
+            <a class="brand" href="{{ url_for('about') }}">
+                <img src="{{ url_for('static', filename='images/home.png') }}" alt="Home" style="height: 20px; width: 20px; margin-right: 6px;">
+                Lost & Found
+            </a>
         </div>
         <div class="nav-right">
             {% if current_user.is_authenticated %}
-                <a href="{{ url_for('browse') }}">Browse</a>
-                <a href="{{ url_for('add_item') }}">Add Item</a>
-                <a href="{{ url_for('submit_feedback') }}">Feedback</a>
+                <a href="{{ url_for('browse') }}">
+                    <img src="{{ url_for('static', filename='images/browse.png') }}" alt="Browse" style="height: 20px; width: 20px; margin-right: 6px;">
+                    Browse
+                </a>
+                <a href="{{ url_for('add_item') }}">
+                    <img src="{{ url_for('static', filename='images/add.png') }}" alt="Add Item" style="height: 20px; width: 20px; margin-right: 6px;">
+                    Add Item
+                </a>
+                <a href="{{ url_for('submit_feedback') }}">
+                    <img src="{{ url_for('static', filename='images/feedback.png') }}" alt="Feedback" style="height: 20px; width: 20px; margin-right: 6px;">
+                    Feedback
+                </a>
+                <a href="{{ url_for('chat') }}">
+                    <img src="{{ url_for('static', filename='images/chat.png') }}" alt="Chat" style="height: 20px; width: 20px; margin-right: 6px;">
+                    Chat
+                </a>
                 {% if current_user.is_admin %}
-                    <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
+                    <a href="{{ url_for('admin_dashboard') }}">
+                        <img src="{{ url_for('static', filename='images/admin_dashboard.png') }}" alt="Admin Dashboard" style="height: 20px; width: 20px; margin-right: 6px;">
+                        Admin Dashboard
+                    </a>
                 {% endif %}
-                <a href="{{ url_for('logout') }}">Logout</a>
+                <a href="{{ url_for('logout') }}">
+                    <img src="{{ url_for('static', filename='images/logout.png') }}" alt="Logout" style="height: 20px; width: 20px; margin-right: 6px;">
+                    Logout
+                </a>
             {% else %}
-                <a href="{{ url_for('login') }}">Login</a>
-                <a href="{{ url_for('signup') }}">Sign Up</a>
+                <a href="{{ url_for('login') }}">
+                    <img src="{{ url_for('static', filename='images/logout.png') }}" alt="Login" style="height: 20px; width: 20px; margin-right: 6px;">
+                    Login
+                </a>
+                <a href="{{ url_for('signup') }}">
+                    <img src="{{ url_for('static', filename='images/signup.png') }}" alt="Sign Up" style="height: 20px; width: 20px; margin-right: 6px;">
+                    Sign Up
+                </a>
             {% endif %}
         </div>
     </nav>
@@ -39,9 +67,19 @@
         {% endif %}
     {% endwith %}
 
-    <!-- Main Content Area -->
+    <!-- Main Content -->
     <main class="main-content">
-        {% block content %}{% endblock %}
+        {% block content %}
+        <div class="profile-container">
+    <div class="profile-card">
+        <img src="{{ url_for('static', filename=user.profile_pic) }}" alt="User Profile Picture" class="profile-img" />
+        <h2>{{ user.name }}</h2>
+        <p class="profile-email">{{ user.email }}</p>
+        <p class="profile-bio">{{ user.bio or "No bio available." }}</p>
+        <a href="{{ url_for('edit_profile') }}" class="btn-edit">Edit Profile</a>
+    </div>
+</div>
+        {% endblock %}
     </main>
 </body>
 </html>

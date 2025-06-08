@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Chat Users{% endblock %}
+
+{% block content %}
+<h2 style="color: #fff;">Chat with Users</h2>
+
+<!-- Search box to filter users -->
+<input type="text" id="userSearch" placeholder="Search users..." onkeyup="filterUsers()" 
+       style="margin-bottom: 12px; padding: 6px; width: 100%; max-width: 400px; border-radius: 6px; border: 1px solid #444; background-color: #222; color: #fff;">
+
+<div class="chat-user-list user-list-container" style="max-width: 400px;">
+  <ul id="userList" style="list-style: none; padding: 0;">
+    {% for user in users %}
+      <li style="margin-bottom: 8px; padding: 8px; border: 1px solid #444; border-radius: 6px; background-color: rgba(0,0,0,0.7);">
+        <a href="{{ url_for('chat_with', user_id=user.id) }}" 
+           style="text-decoration: none; color: #fff; display: flex; align-items: center;">
+          <!-- User status circle -->
+          {% if user.is_online %}
+            <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: #4caf50; margin-right: 8px;"></span>
+          {% else %}
+            <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: #757575; margin-right: 8px;"></span>
+          {% endif %}
+          {{ user.username }}
+        </a>
+      </li>
+    {% else %}
+      <li style="color: #fff;">No other users available to chat.</li>
+    {% endfor %}
+  </ul>
+</div>
+
+<script>
+  // Simple JS to filter users by typing in the search box
+  function filterUsers() {
+    const input = document.getElementById('userSearch');
+    const filter = input.value.toLowerCase();
+    const ul = document.getElementById('userList');
+    const li = ul.getElementsByTagName('li');
+
+    for (let i = 0; i < li.length; i++) {
+      let a = li[i].getElementsByTagName('a')[0];
+      if (a) {
+        let txtValue = a.textContent || a.innerText;
+        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+          li[i].style.display = "";
+        } else {
+          li[i].style.display = "none";
+        }
+      }
+    }
+  }
+</script>
+{% endblock %}

@@ -1,20 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 <div class="container">
     <h1>Add a Lost Item</h1>
     <form method="POST" enctype="multipart/form-data">
         <div class="input-group">
-            <label for="name">Item Name:</label>
-            <input type="text" id="name" name="name" required>
+            <input type="text" name="name" placeholder="Item Name" required>
         </div>
         <div class="input-group">
-            <label for="description">Description:</label>
-            <textarea id="description" name="description" required></textarea>
+            <textarea name="description" placeholder="Description" required></textarea>
         </div>
         <div class="input-group">
-            <label for="phone">Phone Number:</label>
-            <input type="text" id="phone" name="phone" required>
+            <input type="text" name="phone" placeholder="Contact Phone" required>
         </div>
         <div class="input-group">
             <label for="photo">Photo:</label>
@@ -40,10 +40,125 @@
             <select id="status" name="status">
                 <option value="lost">Lost</option>
                 <option value="found">Found</option>
-                <option value="returned">Returned</option>
             </select>
         </div>
+        <div class="input-group">
+            <input type="file" name="photo" accept="image/*">
+        </div>
+
+        <!-- Hidden fields for coordinates -->
+        <input type="hidden" id="latitude" name="latitude">
+        <input type="hidden" id="longitude" name="longitude">
+
+        <!-- Small Map Preview -->
+        <div class="input-group">
+            <div id="map" style="height: 200px; border-radius: 10px; cursor:pointer;"></div>
+            <small>Click the map to select location</small>
+        </div>
+
         <button type="submit">Add Item</button>
     </form>
 </div>
+
+<!-- Modal for Bigger Map -->
+<div id="mapModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span id="closeModal" class="close">&times;</span>
+        <h2>Select Location on Map</h2>
+        <div id="modalMap" style="height: 600px;"></div>
+    </div>
+</div>
+
+<script>
+    // Campus settings
+    var campusCenter = [2.9264, 101.6412];
+    var campusBounds = [
+        [2.9240, 101.6390],
+        [2.9285, 101.6430]
+    ];
+
+    // Small map initialization (preview)
+    var map = L.map('map', {
+        center: campusCenter,
+        zoom: 17,
+        minZoom: 16,
+        maxZoom: 18,
+        maxBounds: campusBounds,
+        maxBoundsViscosity: 1.0,
+        zoomControl: false,
+        dragging: false,
+        scrollWheelZoom: false,
+        doubleClickZoom: false,
+        boxZoom: false,
+        keyboard: false,
+        tap: false,
+        touchZoom: false
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18
+    }).addTo(map);
+
+    var previewMarker;
+
+    // If user clicks on small map, open modal
+    document.getElementById('map').addEventListener('click', function () {
+        document.getElementById('mapModal').style.display = 'block';
+        setTimeout(function () {
+            modalMap.invalidateSize();
+        }, 100);
+    });
+
+    // Modal map initialization (big map)
+    var modalMap = L.map('modalMap', {
+        center: campusCenter,
+        zoom: 17,
+        minZoom: 16,
+        maxZoom: 18,
+        maxBounds: campusBounds,
+        maxBoundsViscosity: 1.0
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18
+    }).addTo(modalMap);
+
+    var modalMarker;
+
+    // When user clicks on modal map, place marker & update inputs
+    function onModalMapClick(e) {
+        if (modalMarker) {
+            modalMap.removeLayer(modalMarker);
+        }
+        modalMarker = L.marker(e.latlng).addTo(modalMap);
+
+        // Set hidden fields
+        document.getElementById('latitude').value = e.latlng.lat;
+        document.getElementById('longitude').value = e.latlng.lng;
+
+        // Also update preview map
+        if (previewMarker) {
+            map.removeLayer(previewMarker);
+        }
+        previewMarker = L.marker(e.latlng).addTo(map);
+
+        // Close modal after selection
+        document.getElementById('mapModal').style.display = 'none';
+    }
+
+    modalMap.on('click', onModalMapClick);
+
+    // Close modal button
+    document.getElementById('closeModal').addEventListener('click', function () {
+        document.getElementById('mapModal').style.display = 'none';
+    });
+
+    // Optional: Close modal if clicked outside modal-content
+    window.onclick = function(event) {
+        var modal = document.getElementById('mapModal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    };
+</script>
 {% endblock %}
