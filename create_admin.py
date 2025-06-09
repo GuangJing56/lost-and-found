@@ -1,32 +1,22 @@
+# create_admin.py
+from app import create_app, db, User
+app = create_app()
 from werkzeug.security import generate_password_hash
-import sqlite3
 
-# Admin details
-username = 'admin13579'
-email = 'admin@localhost'  # Dummy email to satisfy NOT NULL constraint
-password = 'admin12345678'
-is_admin = 1
-is_verified = 1
+with app.app_context():
+    db.create_all()  # Ensure tables are created
 
-# Hash the password
-hashed_password = generate_password_hash(password)
+    username = 'admin13579'
+    email = 'admin@localhost'
+    password = 'admin12345678'
 
-# Connect to the database
-conn = sqlite3.connect('lost_found.db')
-c = conn.cursor()
-
-# Check if the user already exists
-c.execute("SELECT * FROM user WHERE username = ?", (username,))
-if c.fetchone():
-    print("Admin user already exists.")
-else:
-    # Insert admin with dummy email
-    c.execute("""
-        INSERT INTO user (username, email, password, is_admin, is_verified)
-        VALUES (?, ?, ?, ?, ?)
-    """, (username, email, hashed_password, is_admin, is_verified))
-
-    conn.commit()
-    print("Admin account created successfully.")
-
-conn.close()
+    if User.query.filter_by(username=username).first():
+        print("Admin user already exists.")
+    else:
+        hashed_password = generate_password_hash(password)
+        admin = User(username=username, email=email,
+                     password=hashed_password, is_admin=True,
+                     is_verified=True)
+        db.session.add(admin)
+        db.session.commit()
+        print("✅ Admin account created successfully.")
