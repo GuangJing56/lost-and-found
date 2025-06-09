@@ -1,5 +1,6 @@
 # create_admin.py
-from lostnfound import app, db, User
+from app import create_app, db, User
+app = create_app()
 from werkzeug.security import generate_password_hash
 
 with app.app_context():
