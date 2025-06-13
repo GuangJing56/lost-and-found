@@ -8,7 +8,7 @@
     <h1>Welcome to the Lost & Found System</h1>
 
     <section class="important-note" aria-labelledby="important-note-title" style="background-color:#080808; padding:15px; border-left:5px solid #0c0c0c; margin-bottom:20px;">
-        <h2 id="important-note-title" style="color:#856404;">Important Notice</h2>
+        <h2 id="important-note-title" style="color:red;">Important Notice</h2>
         <p>
             This Lost & Found system is <strong>exclusively for MMU students and staff.</strong> Access and reporting are limited to authorized campus members only. 
             If you are not part of MMU or cannot find your lost item in this system, please visit the campus Lost & Found office directly for assistance.
@@ -43,8 +43,13 @@
            5. Once you find a matching item, contact the reporter directly via the <i class="fa-solid fa-comments" style="color: #6f42c1; margin-left:5px; margin-right:5px;"></i>
             <strong><a href="{{ url_for('chat') }}">Chat</a></strong> feature to arrange pickup or ask questions.
         </p>
-        <p>
-            6.After retrieving or returning an item, please update its status to <i class="fa-solid fa-check-circle" style="color: #28a745; margin-left:5px; margin-right:5px;"></i>
+         <p>
+           6. Once you've used the service, share your experience through the
+           <i class="fa-solid fa-star" style="color: #ffc107; margin-left:5px; margin-right:5px;"></i>
+           <strong><a href="{{ url_for('submit_feedback') }}">Submit Feedback</a></strong> feature to help us improve.
+        </p>
+
+           7. After retrieving or returning an item, please update its status to <i class="fa-solid fa-check-circle" style="color: #28a745; margin-left:5px; margin-right:5px;"></i>
             <strong>Returned</strong> to keep the system up-to-date for all users.
         </p>
     </section>

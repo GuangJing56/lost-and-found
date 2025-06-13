@@ -35,7 +35,7 @@
                 <img src="{{ url_for('static', filename='uploads/' ~ item.photo) }}" width="200" alt="Item Photo">
             {% endif %}
             <form method="POST" action="{{ url_for('delete_item', item_id=item.id) }}">
-                <button type="submit" onclick="return confirm('Delete this item?')">Delete</button>
+                <button type="submit" onclick="return confirm('Delete this item?')" class="btn-danger">Delete</button>
             </form>
         </div>
         {% endfor %}
@@ -53,7 +53,7 @@
             <p><strong>Submitted:</strong> {{ feedback.date_submitted.strftime('%d/%m/%Y') }}</p>
             <p>{{ feedback.content }}</p>
             <form method="POST" action="{{ url_for('delete_feedback', feedback_id=feedback.id) }}">
-                <button type="submit" onclick="return confirm('Delete this feedback?')">Delete</button>
+                <button type="submit" onclick="return confirm('Delete this feedback?')" class="btn-danger">Delete</button>
             </form>
         </div>
         {% endfor %}
@@ -71,7 +71,7 @@
             <p><strong>Reason:</strong> {{ report.reason }}</p>
             <p><strong>Reported:</strong> {{ report.date_reported.strftime('%d/%m/%Y') }}</p>
             <form method="POST" action="{{ url_for('delete_report', report_id=report.id) }}">
-                <button type="submit" onclick="return confirm('Delete this report?')">Delete</button>
+                <button type="submit" onclick="return confirm('Delete this report?')" class="btn-danger">Delete</button>
             </form>
         </div>
         {% endfor %}
@@ -86,10 +86,6 @@
         <thead>
             <tr>
                 <th>Username</th>
-                <th>Email</th>
-                <th>Warnings</th>
-                <th>Status</th>
-                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -108,11 +104,11 @@
                 <td>
                     {% if not user.is_banned %}
                         <form method="POST" action="{{ url_for('warn_user', user_id=user.id) }}" style="display:inline;">
-                            <button type="submit" onclick="return confirm('Warn this user?')">Warn</button>
+                            <button type="submit" onclick="return confirm('Warn this user?')" class="btn-danger">Warn</button>
                         </form>
                     {% else %}
                         <form method="POST" action="{{ url_for('unban_user', user_id=user.id) }}" style="display:inline;">
-                            <button type="submit" onclick="return confirm('Unban this user?')">Unban</button>
+                            <button type="submit" onclick="return confirm('Unban this user?')" class="btn-success">Unban</button>
                         </form>
                     {% endif %}
                 </td>
@@ -125,3 +121,5 @@
     {% endif %}
 </div>
 {% endblock %}
+<style>
+

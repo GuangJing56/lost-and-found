@@ -2,13 +2,24 @@
 
 {% block content %}
 <div class="container">
+
     <div class="form-container">
         <h2>Submit Feedback</h2>
         <form method="POST">
             <div class="input-group">
-                <label for="content">Your Feedback:</label>
-                <textarea id="content" name="content" required></textarea>
+                <label for="feedback_type">Type:</label>
+                <select name="feedback_type" id="feedback_type" required>
+                    <option value="Bug">Bug</option>
+                    <option value="Suggestion">Suggestion</option>
+                    <option value="Other">Other</option>
+                </select>
             </div>
+
+            <div class="input-group">
+                <label for="content">Message:</label>
+                <textarea id="content" name="content" rows="4" required></textarea>
+            </div>
+
             <button type="submit">Submit</button>
         </form>
     </div>
@@ -33,35 +44,6 @@
             <p>No feedback submitted yet.</p>
         {% endif %}
     </div>
-<div class="form-container">
-    <h2>Submit Feedback</h2>
-    <form method="POST">
-        <div class="input-group">
-            <label for="feedback_type">Type:</label>
-            <select name="feedback_type" id="feedback_type" required>
-                <option value="Bug">Bug</option>
-                <option value="Suggestion">Suggestion</option>
-                <option value="Other">Other</option>
-            </select>
-        </div>
 
-        <div class="input-group">
-            <label for="content">Message:</label>
-            <textarea id="content" name="content" rows="4" required></textarea>
-        </div>
-
-        <div class="input-group">
-            <label for="rating">Rating:</label>
-            <div id="rating" class="rating-group">
-                <input type="radio" name="rating" value="1" id="star1" required><label for="star1">★</label>
-                <input type="radio" name="rating" value="2" id="star2"><label for="star2">★</label>
-                <input type="radio" name="rating" value="3" id="star3"><label for="star3">★</label>
-                <input type="radio" name="rating" value="4" id="star4"><label for="star4">★</label>
-                <input type="radio" name="rating" value="5" id="star5"><label for="star5">★</label>
-            </div>
-        </div>
-
-        <button type="submit">Submit</button>
-    </form>
 </div>
 {% endblock %}

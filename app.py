@@ -286,7 +286,7 @@ def register_routes(app):
     @login_required
     def add_item():
         if request.method == 'POST':
-            name = request.form['name']
+            name = request.form['person name']
             description = request.form['description']
             phone = request.form['phone']
             location = request.form['location']
@@ -373,7 +373,7 @@ def register_routes(app):
             feedback = Feedback(
                 user_id=current_user.id,
                 feedback_type=feedback_type,
-                content=content
+                content=content,
             )
             db.session.add(feedback)
             db.session.commit()
@@ -580,3 +580,4 @@ def register_routes(app):
 if __name__ == '__main__':
     app = create_app()
     app.run(debug=True) 
+# Test change: add this line to test git commit

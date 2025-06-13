@@ -8,7 +8,7 @@
     <h1>Add a Lost Item</h1>
     <form method="POST" enctype="multipart/form-data">
         <div class="input-group">
-            <input type="text" name="name" placeholder="Item Name" required>
+            <input type="text" name="person name" placeholder="Your Name" required>
         </div>
         <div class="input-group">
             <textarea name="description" placeholder="Description" required></textarea>
@@ -17,12 +17,24 @@
             <input type="text" name="phone" placeholder="Contact Phone" required>
         </div>
         <div class="input-group">
-            <label for="photo">Photo:</label>
-            <input type="file" id="photo" name="photo">
+            <label for="photo">Photo: <small>(Only PNG images allowed)</small></label>
+            <input type="file" id="photo" name="photo" accept="image/png" required>
         </div>
         <div class="input-group">
-            <label for="location">Location Found:</label>
-            <input type="text" id="location" name="location" required>
+              <label for="location">Location Found or Lost:</label>
+              <select id="location" name="location" required>
+              <option value="">-- Select Location --</option>
+              <option value="Center Food Court">Center Food Court</option>
+              <option value="Library">Library</option>
+              <option value="DTC">DTC</option>
+              <option value="FCI">FCI</option>
+              <option value="FOE">FOE</option>
+              <option value="FCM">FCM</option>
+              <option value="FOM">FOM</option>
+              <option value="STC">STC</option>
+              <option value="CLC">CLC</option> 
+              <option value="Parking Lot">Parking Lot</option>
+            </select>
         </div>
         <div class="input-group">
             <label for="category">Category:</label>
@@ -41,9 +53,6 @@
                 <option value="lost">Lost</option>
                 <option value="found">Found</option>
             </select>
-        </div>
-        <div class="input-group">
-            <input type="file" name="photo" accept="image/*">
         </div>
 
         <!-- Hidden fields for coordinates -->
