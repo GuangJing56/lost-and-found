@@ -1,125 +1,239 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
+<div class="admin-container">
     <h1>Admin Dashboard</h1>
 
     <!-- Filter Form -->
     <form method="get" class="filter-form">
-        <input type="text" name="search" placeholder="Search by name or description" value="{{ request.args.get('search', '') }}">
+        <input type="text" name="search" placeholder="Search by name/description" value="{{ request.args.get('search', '') }}">
         <select name="status">
             <option value="all" {% if request.args.get('status') == 'all' %}selected{% endif %}>All</option>
             <option value="lost" {% if request.args.get('status') == 'lost' %}selected{% endif %}>Lost</option>
             <option value="found" {% if request.args.get('status') == 'found' %}selected{% endif %}>Found</option>
         </select>
-        <button type="submit">Filter</button>
+        <button type="submit" class="filter-btn">Apply Filters</button>
     </form>
 
     <!-- Export Buttons -->
-    <div style="margin-top: 10px;">
-        <a href="{{ url_for('download_pdf') }}" class="btn btn-secondary">Export as PDF</a>
-        <a href="{{ url_for('download_csv') }}" class="btn btn-secondary">Export as CSV</a>
+    <div class="export-buttons">
+        <a href="{{ url_for('download_pdf') }}" class="export-btn">Export PDF</a>
+        <a href="{{ url_for('download_csv') }}" class="export-btn">Export CSV</a>
     </div>
 
-    <!-- Lost Items List -->
-    <h2 style="margin-top: 30px;">Lost & Found Items</h2>
-    {% if items %}
-        {% for item in items %}
-        <div class="item-box">
-            <h3>{{ item.name }}</h3>
-            <p><strong>Status:</strong> {{ item.status }}</p>
-            <p><strong>Description:</strong> {{ item.description }}</p>
-            <p><strong>Phone:</strong> {{ item.phone }}</p>
-            <p><strong>Date:</strong> {{ item.date_reported.strftime('%d/%m/%Y') }}</p>
-            {% if item.photo %}
-                <img src="{{ url_for('static', filename='uploads/' ~ item.photo) }}" width="200" alt="Item Photo">
-            {% endif %}
-            <form method="POST" action="{{ url_for('delete_item', item_id=item.id) }}">
-                <button type="submit" onclick="return confirm('Delete this item?')" class="btn-danger">Delete</button>
-            </form>
-        </div>
-        {% endfor %}
-    {% else %}
-        <p>No items found.</p>
-    {% endif %}
+    <!-- Lost Items Section -->
+    <section class="admin-section">
+        <h2>Lost & Found Items</h2>
+        {% if items %}
+            {% for item in items %}
+            <div class="item-card">
+                <h3>{{ item.name }}</h3>
+                <p><strong>Status:</strong> {{ item.status }}</p>
+                <p><strong>Description:</strong> {{ item.description }}</p>
+                <p><strong>Date:</strong> {{ item.date_reported.strftime('%d/%m/%Y') }}</p>
+                {% if item.photo %}
+                    <img src="{{ url_for('static', filename='uploads/' ~ item.photo) }}" class="item-image">
+                {% endif %}
+                <form method="POST" action="{{ url_for('delete_item', item_id=item.id) }}">
+                    <button type="submit" class="action-btn delete-btn">Delete</button>
+                </form>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-items">No items found.</p>
+        {% endif %}
+    </section>
 
     <!-- Feedback Section -->
-    <h2 style="margin-top: 40px;">User Feedback</h2>
-    {% if feedbacks %}
-        {% for feedback in feedbacks %}
-        <div class="item-box">
-            <p><strong>From:</strong> {{ feedback.user.username }}</p>
-            <p><strong>Type:</strong> {{ feedback.feedback_type }}</p>
-            <p><strong>Submitted:</strong> {{ feedback.date_submitted.strftime('%d/%m/%Y') }}</p>
-            <p>{{ feedback.content }}</p>
-            <form method="POST" action="{{ url_for('delete_feedback', feedback_id=feedback.id) }}">
-                <button type="submit" onclick="return confirm('Delete this feedback?')" class="btn-danger">Delete</button>
-            </form>
-        </div>
-        {% endfor %}
-    {% else %}
-        <p>No feedback submitted yet.</p>
-    {% endif %}
+    <section class="admin-section">
+        <h2>User Feedback</h2>
+        {% if feedbacks %}
+            {% for feedback in feedbacks %}
+            <div class="feedback-card">
+                <p><strong>From:</strong> {{ feedback.user.username }}</p>
+                <p><strong>Type:</strong> {{ feedback.feedback_type }}</p>
+                <p><strong>Submitted:</strong> {{ feedback.date_submitted.strftime('%d/%m/%Y') }}</p>
+                <p>{{ feedback.content }}</p>
+                <form method="POST" action="{{ url_for('delete_feedback', feedback_id=feedback.id) }}">
+                    <button type="submit" class="action-btn delete-btn">Delete</button>
+                </form>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-items">No feedback submitted yet.</p>
+        {% endif %}
+    </section>
 
     <!-- Reports Section -->
-    <h2 style="margin-top: 40px;">Item Reports</h2>
-    {% if reports %}
-        {% for report in reports %}
-        <div class="item-box">
-            <p><strong>From:</strong> {{ report.user.username }}</p>
-            <p><strong>Item:</strong> {{ report.item.name }}</p>
-            <p><strong>Reason:</strong> {{ report.reason }}</p>
-            <p><strong>Reported:</strong> {{ report.date_reported.strftime('%d/%m/%Y') }}</p>
-            <form method="POST" action="{{ url_for('delete_report', report_id=report.id) }}">
-                <button type="submit" onclick="return confirm('Delete this report?')" class="btn-danger">Delete</button>
-            </form>
-        </div>
-        {% endfor %}
-    {% else %}
-        <p>No reports submitted yet.</p>
-    {% endif %}
+    <section class="admin-section">
+        <h2>Item Reports</h2>
+        {% if reports %}
+            {% for report in reports %}
+            <div class="report-card">
+                <p><strong>From:</strong> {{ report.user.username }}</p>
+                <p><strong>Item:</strong> {{ report.item.name }}</p>
+                <p><strong>Reason:</strong> {{ report.reason }}</p>
+                <p><strong>Reported:</strong> {{ report.date_reported.strftime('%d/%m/%Y') }}</p>
+                <form method="POST" action="{{ url_for('delete_report', report_id=report.id) }}">
+                    <button type="submit" class="action-btn delete-btn">Delete</button>
+                </form>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-items">No reports submitted yet.</p>
+        {% endif %}
+    </section>
 
-    <!-- User Warning & Ban Management -->
-    <h2 style="margin-top: 40px;">User Warnings & Bans</h2>
-    {% if users %}
-    <table class="admin-table">
-        <thead>
-            <tr>
-                <th>Username</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for user in users %}
-            <tr>
-                <td>{{ user.username }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.warnings }}</td>
-                <td>
-                    {% if user.is_banned %}
-                        <span style="color:red;">Banned</span>
-                    {% else %}
-                        Active
-                    {% endif %}
-                </td>
-                <td>
-                    {% if not user.is_banned %}
-                        <form method="POST" action="{{ url_for('warn_user', user_id=user.id) }}" style="display:inline;">
-                            <button type="submit" onclick="return confirm('Warn this user?')" class="btn-danger">Warn</button>
-                        </form>
-                    {% else %}
-                        <form method="POST" action="{{ url_for('unban_user', user_id=user.id) }}" style="display:inline;">
-                            <button type="submit" onclick="return confirm('Unban this user?')" class="btn-success">Unban</button>
-                        </form>
-                    {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-        <p>No users found.</p>
-    {% endif %}
+    <!-- User Management Section -->
+    <section class="admin-section">
+        <h2>User Warnings & Bans</h2>
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Warnings</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.warnings }}</td>
+                    <td class="status-cell {% if user.is_banned %}banned{% endif %}">
+                        {{ 'Banned' if user.is_banned else 'Active' }}
+                    </td>
+                    <td>
+                        {% if not user.is_banned %}
+                            <form method="POST" action="{{ url_for('warn_user', user_id=user.id) }}">
+                                <button type="submit" class="action-btn warn-btn">Warn</button>
+                            </form>
+                        {% else %}
+                            <form method="POST" action="{{ url_for('unban_user', user_id=user.id) }}">
+                                <button type="submit" class="action-btn unban-btn">Unban</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
 </div>
-{% endblock %}
-<style>
 
+<style>
+/* ===== ADMIN DASHBOARD SPECIFIC STYLES ===== */
+.admin-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+.admin-section {
+    margin: 40px 0;
+    background: rgba(30, 30, 30, 0.8);
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* Card Styles */
+.item-card,
+.feedback-card,
+.report-card {
+    background: rgba(40, 40, 40, 0.8);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    border-left: 4px solid #1e88e5;
+}
+
+/* Button Styles - Ensured perfect matching */
+.action-btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-block;
+    text-align: center;
+    font-size: 14px;
+    margin: 2px;
+}
+
+.delete-btn, .warn-btn {
+    background: #e60d38;
+    color: white;
+}
+
+.delete-btn:hover, .warn-btn:hover {
+    background: #bb1f2c;
+}
+
+.unban-btn {
+    background: #2e7d32;
+    color: white;
+}
+
+.unban-btn:hover {
+    background: #1b5e20;
+}
+
+.filter-btn, .export-btn {
+    background: #1e88e5;
+    color: white;
+}
+
+.filter-btn:hover, .export-btn:hover {
+    background: #1565c0;
+}
+
+/* Table Styles */
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.user-table th, .user-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #444;
+}
+
+.user-table th {
+    background: #333;
+}
+
+.status-cell.banned {
+    color: #e60d38;
+    font-weight: bold;
+}
+
+.no-items {
+    color: #aaa;
+    font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .user-table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .filter-form {
+        flex-direction: column;
+    }
+    
+    .item-card,
+    .feedback-card,
+    .report-card {
+        padding: 12px;
+    }
+}
+</style>
+{% endblock %}
